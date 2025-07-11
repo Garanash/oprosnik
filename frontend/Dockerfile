@@ -2,7 +2,8 @@ FROM node:20-alpine as build
 WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn config set strict-ssl false
-RUN yarn install && chmod -R +x node_modules/.bin
+RUN yarn install
+RUN chmod +x node_modules/.bin/vite
 COPY . .
 RUN yarn build
 
