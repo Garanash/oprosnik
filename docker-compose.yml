@@ -2,7 +2,6 @@ version: '3.8'
 
 services:
   postgres:
-    container_name: postgres
     restart: always
     networks:
       - db-network
@@ -24,7 +23,6 @@ services:
     command: postgres -c shared_buffers=128MB -c max_connections=100
 
   backend:
-    container_name: backend
     networks:
       - db-network
     build: ./backend
@@ -39,7 +37,6 @@ services:
       - DATABASE_URL=postgresql+asyncpg://postgres:postgres@postgres:5432/oprosnik
 
   frontend:
-    container_name: frontend
     networks:
       - db-network
     build: ./frontend
