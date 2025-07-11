@@ -1,42 +1,58 @@
 version: '3.8'
+
 services:
-  db:
-    image: postgres:15
+  postgres:
+    container_name: postgres
     restart: always
+    networks:
+      - db-network
+    image: postgres:15
     environment:
+      POSTGRES_DB: oprosnik
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: oprosnik
+      PGDATA: /var/lib/postgresql/data/pgdata/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d oprosnik -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./pg-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+    command: postgres -c shared_buffers=128MB -c max_connections=100
+
   backend:
+    container_name: backend
+    networks:
+      - db-network
     build: ./backend
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-    volumes:
-      - ./backend:/app
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
     ports:
       - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/oprosnik
-  frontend:
-    build: ./frontend
-    ports:
-      - "8080:80"
-    depends_on:
-      - backend
-  pgadmin:
-    image: dpage/pgadmin4
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "5050:80"
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@postgres:5432/oprosnik
+
+  frontend:
+    container_name: frontend
+    networks:
+      - db-network
+    build: ./frontend
     depends_on:
-      - db
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+
+networks:
+  db-network:
+    driver: bridge
+
 volumes:
-  pgdata: 
+  pg-data: 
