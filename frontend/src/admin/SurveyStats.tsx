@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, Table, TableHead, TableRow, TableCell, TableBody, Paper, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Box, Typography, Button, Table, TableHead, TableRow, TableCell, TableBody, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Pagination, Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import IconButton from '@mui/material/IconButton';
@@ -39,6 +39,12 @@ const SurveyStats: React.FC<{ surveyId: number; onBack: () => void }> = ({ surve
   const respondents = data?.respondents || [];
   const questions = data?.questions || [];
 
+  // Пагинация
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 10;
+  const pageCount = Math.ceil(respondents.length / rowsPerPage);
+  const pagedRespondents = respondents.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+
   // Состояние для всплывающего окна
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogContent, setDialogContent] = useState<string>('');
@@ -52,17 +58,17 @@ const SurveyStats: React.FC<{ surveyId: number; onBack: () => void }> = ({ surve
 
   return (
     <>
-      <div style={{ width: '100vw', minHeight: '100vh', background: '#f8fafc', margin: 0, padding: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '24px 0 12px 0' }}>
-          <Typography variant="h5" fontWeight={700} sx={{ ml: 3 }}>Статистика по опросу #{surveyId}</Typography>
-          <Button onClick={onBack} sx={{ ml: 2 }}>Назад</Button>
+      <div style={{ width: '100vw', minHeight: '100vh', background: 'linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%)', margin: 0, padding: 0, boxSizing: 'border-box', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '24px 0 12px 0', background: 'rgba(255,255,255,0.9)', boxShadow: '0 2px 8px #e0e0e0', zIndex: 2 }}>
+          <Typography variant="h5" fontWeight={700} sx={{ ml: 3, color: '#222' }}>Статистика по опросу #{surveyId}</Typography>
+          <Button onClick={onBack} sx={{ ml: 2, fontWeight: 600, color: '#1976d2' }}>Назад</Button>
         </div>
         {isLoading ? (
           <Typography sx={{ px: 3 }}>Загрузка...</Typography>
         ) : (
-          <Box sx={{ width: '100vw', maxWidth: '100vw', overflowX: 'auto', overflowY: 'auto', height: '70vh', p: 2 }}>
-            <Paper elevation={3} sx={{ width: '100%', overflow: 'auto', borderRadius: 2 }}>
-              <Table size="small" sx={{ minWidth: 1200, borderCollapse: 'separate', borderSpacing: 0 }}>
+          <Box sx={{ flex: 1, width: '100%', maxWidth: '100vw', overflowX: 'hidden', overflowY: 'auto', p: { xs: 0, md: 2 }, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', minHeight: 'calc(100vh - 120px)' }}>
+            <Paper elevation={4} sx={{ width: '100%', borderRadius: 3, p: 2, boxShadow: '0 4px 24px #e0e7ef', background: 'rgba(255,255,255,0.98)' }}>
+              <Table size="small" sx={{ minWidth: 900, borderCollapse: 'separate', borderSpacing: 0 }}>
                 <TableHead>
                   <TableRow>
                     <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: 600, width: 120, background: '#f1f5f9' }}>Имя</TableCell>
@@ -75,7 +81,7 @@ const SurveyStats: React.FC<{ surveyId: number; onBack: () => void }> = ({ surve
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {respondents.map(r => (
+                  {pagedRespondents.map(r => (
                     <TableRow key={r.id}>
                       <TableCell sx={{ border: '1px solid #e0e0e0', width: 120 }}>{r.first_name}</TableCell>
                       <TableCell sx={{ border: '1px solid #e0e0e0', width: 120 }}>{r.last_name}</TableCell>
@@ -112,6 +118,11 @@ const SurveyStats: React.FC<{ surveyId: number; onBack: () => void }> = ({ surve
                   ))}
                 </TableBody>
               </Table>
+              {pageCount > 1 && (
+                <Stack direction="row" justifyContent="center" alignItems="center" sx={{ mt: 2 }}>
+                  <Pagination count={pageCount} page={page} onChange={(_, v) => setPage(v)} color="primary" shape="rounded" />
+                </Stack>
+              )}
             </Paper>
           </Box>
         )}
