@@ -27,7 +27,13 @@ async def create_survey(db: AsyncSession, survey: SurveyCreate) -> Survey:
     return result.scalars().first()
 
 async def update_survey(db: AsyncSession, survey_id: int, survey: SurveyCreate) -> Survey:
-    db_survey = await db.get(Survey, survey_id)
+    # Загружаем survey с вопросами через selectinload
+    result = await db.execute(
+        select(Survey)
+        .options(selectinload(Survey.questions).selectinload(Question.options))
+        .where(Survey.id == survey_id)
+    )
+    db_survey = result.scalars().first()
     if not db_survey:
         raise Exception("Survey not found")
     db_survey.title = survey.title

@@ -127,3 +127,56 @@ docker compose run --rm backend alembic upgrade head
 ## Лицензия
 
 MIT 
+
+---
+
+## Развёртывание на Linux-сервере (пошагово)
+
+1. **Установите Docker и Docker Compose**
+   ```sh
+   sudo apt update
+   sudo apt install -y docker.io docker-compose
+   sudo systemctl enable --now docker
+   ```
+
+2. **Откройте порты 80 и 443 в фаерволе**
+   ```sh
+   sudo ufw allow 80/tcp
+   sudo ufw allow 443/tcp
+   sudo ufw reload
+   ```
+
+3. **Скопируйте проект на сервер**
+   - Через SCP, rsync или git clone:
+     ```sh
+     scp -r ./oprosnik user@your_server:/home/user/
+     # или
+     git clone <repo-url>
+     ```
+
+4. **Перейдите в папку проекта**
+   ```sh
+   cd ~/oprosnik
+   ```
+
+5. **Очистите старые данные БД (если запускали раньше)**
+   ```sh
+   sudo rm -rf ./pg-data
+   ```
+
+6. **Запустите сервисы**
+   ```sh
+   sudo docker compose up -d --build
+   ```
+
+7. **Проверьте статус контейнеров**
+   ```sh
+   sudo docker compose ps
+   sudo docker compose logs -f
+   ```
+
+8. **Откройте в браузере**
+   - http://<IP_Сервера> (frontend)
+   - http://<IP_Сервера>/admin (админка)
+
+--- 
