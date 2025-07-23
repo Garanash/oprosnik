@@ -180,3 +180,46 @@ MIT
    - http://<IP_Сервера>/admin (админка)
 
 --- 
+
+## Автоматизация HTTPS через certbot (Let's Encrypt)
+
+1. **Откройте порт 80 на сервере:**
+   ```sh
+   sudo ufw allow 80/tcp
+   sudo ufw reload
+   ```
+
+2. **Остановите docker compose:**
+   ```sh
+   sudo docker compose down
+   ```
+
+3. **Получите сертификат для домена (один раз):**
+   ```sh
+   sudo apt update && sudo apt install -y certbot
+   sudo certbot certonly --standalone -d felix.opros.almazgeobur.ru --non-interactive --agree-tos -m youremail@example.com
+   ```
+   Сертификаты появятся в `/etc/letsencrypt/live/felix.opros.almazgeobur.ru/`
+
+4. **Запустите docker compose:**
+   ```sh
+   sudo docker compose up -d --build
+   ```
+
+5. **Автопродление сертификата (cron):**
+   Откройте crontab:
+   ```sh
+   sudo crontab -e
+   ```
+   Добавьте строку:
+   ```
+   0 3 * * * certbot renew --pre-hook "docker compose -f /home/admintbot/oprosnik/docker-compose.yml down" --post-hook "docker compose -f /home/admintbot/oprosnik/docker-compose.yml up -d"
+   ```
+   (Путь к compose-файлу укажите свой)
+
+6. **Проверить продление вручную:**
+   ```sh
+   sudo certbot renew --dry-run
+   ```
+
+--- 
