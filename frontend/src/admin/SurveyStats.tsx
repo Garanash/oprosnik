@@ -67,25 +67,25 @@ const SurveyStats: React.FC<{ surveyId: number; onBack: () => void }> = ({ surve
           <Typography sx={{ px: 3 }}>Загрузка...</Typography>
         ) : (
           <Box sx={{ flex: 1, width: '100%', maxWidth: '100vw', overflowX: 'hidden', overflowY: 'auto', p: { xs: 0, md: 2 }, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', minHeight: 'calc(100vh - 120px)' }}>
-            <Paper elevation={4} sx={{ width: '100%', borderRadius: 3, p: 2, boxShadow: '0 4px 24px #e0e7ef', background: 'rgba(255,255,255,0.98)' }}>
-              <Table size="small" sx={{ minWidth: 900, borderCollapse: 'separate', borderSpacing: 0 }}>
+            <Paper elevation={4} sx={{ width: '100%', borderRadius: 3, p: 2, boxShadow: '0 4px 24px #e0e7ef', background: 'rgba(255,255,255,0.98)', overflowX: 'auto' }}>
+              <Table size="small" sx={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0, tableLayout: 'auto' }}>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: 600, width: 120, background: '#f1f5f9' }}>Имя</TableCell>
-                    <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: 600, width: 120, background: '#f1f5f9' }}>Фамилия</TableCell>
-                    <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: 600, width: 180, background: '#f1f5f9' }}>Время</TableCell>
+                    <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: 600, minWidth: 80, background: '#f1f5f9' }}>Имя</TableCell>
+                    <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: 600, minWidth: 80, background: '#f1f5f9' }}>Фамилия</TableCell>
+                    <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: 600, minWidth: 120, background: '#f1f5f9' }}>Время</TableCell>
                     {questions.map(q => (
-                      <TableCell key={q.id} align="center" sx={{ border: '1px solid #e0e0e0', fontWeight: 600, width: 220, background: '#f1f5f9' }}>{q.text}</TableCell>
+                      <TableCell key={q.id} align="center" sx={{ border: '1px solid #e0e0e0', fontWeight: 600, minWidth: 140, maxWidth: 220, background: '#f1f5f9', whiteSpace: 'normal', wordBreak: 'break-word', textOverflow: 'ellipsis', overflow: 'hidden' }}>{q.text}</TableCell>
                     ))}
-                    <TableCell sx={{ border: '1px solid #e0e0e0', width: 60, background: '#f1f5f9' }}></TableCell>
+                    <TableCell sx={{ border: '1px solid #e0e0e0', minWidth: 40, maxWidth: 60, background: '#f1f5f9' }}></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {pagedRespondents.map(r => (
                     <TableRow key={r.id}>
-                      <TableCell sx={{ border: '1px solid #e0e0e0', width: 120 }}>{r.first_name}</TableCell>
-                      <TableCell sx={{ border: '1px solid #e0e0e0', width: 120 }}>{r.last_name}</TableCell>
-                      <TableCell sx={{ border: '1px solid #e0e0e0', width: 180 }}>{new Date(r.started_at).toLocaleString()}</TableCell>
+                      <TableCell sx={{ border: '1px solid #e0e0e0', minWidth: 80 }}>{r.first_name}</TableCell>
+                      <TableCell sx={{ border: '1px solid #e0e0e0', minWidth: 80 }}>{r.last_name}</TableCell>
+                      <TableCell sx={{ border: '1px solid #e0e0e0', minWidth: 120 }}>{new Date(r.started_at).toLocaleString()}</TableCell>
                       {questions.map(q => {
                         const ans = r.answers.find(a => a.question_id === q.id);
                         const value = ans?.text || ans?.option_id || '';
@@ -93,13 +93,13 @@ const SurveyStats: React.FC<{ surveyId: number; onBack: () => void }> = ({ surve
                           <TableCell
                             key={q.id}
                             align="center"
-                            sx={{ border: '1px solid #e0e0e0', width: 220, cursor: value ? 'pointer' : 'default', background: value ? '#f9fafb' : undefined }}
+                            sx={{ border: '1px solid #e0e0e0', minWidth: 140, maxWidth: 220, cursor: value ? 'pointer' : 'default', background: value ? '#f9fafb' : undefined, whiteSpace: 'normal', wordBreak: 'break-word', textOverflow: 'ellipsis', overflow: 'hidden' }}
                             onClick={() => value && handleOpenDialog(String(value))}
                           >
                             <span style={{
                               display: 'inline-block',
                               maxWidth: 180,
-                              whiteSpace: 'nowrap',
+                              whiteSpace: 'normal',
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
                               verticalAlign: 'middle',
@@ -109,7 +109,7 @@ const SurveyStats: React.FC<{ surveyId: number; onBack: () => void }> = ({ surve
                           </TableCell>
                         );
                       })}
-                      <TableCell sx={{ border: '1px solid #e0e0e0', width: 60 }}>
+                      <TableCell sx={{ border: '1px solid #e0e0e0', minWidth: 40, maxWidth: 60 }}>
                         <IconButton color="error" onClick={() => handleDeleteRespondent(r.id)} size="small">
                           <DeleteIcon />
                         </IconButton>
