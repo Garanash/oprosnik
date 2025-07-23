@@ -75,9 +75,9 @@ const SurveyStats: React.FC<{ surveyId: number; onBack: () => void }> = ({ surve
                     <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: 600, minWidth: 80, background: '#f1f5f9' }}>Фамилия</TableCell>
                     <TableCell sx={{ border: '1px solid #e0e0e0', fontWeight: 600, minWidth: 120, background: '#f1f5f9' }}>Время</TableCell>
                     {questions.map(q => (
-                      <TableCell key={q.id} align="center" sx={{ border: '1px solid #e0e0e0', fontWeight: 600, minWidth: 140, maxWidth: 220, background: '#f1f5f9', whiteSpace: 'normal', wordBreak: 'break-word', textOverflow: 'ellipsis', overflow: 'hidden' }}>{q.text}</TableCell>
+                      <TableCell key={q.id} align="center" sx={{ border: '1px solid #e0e0e0', fontWeight: 600, minWidth: 80, maxWidth: 120, background: '#f1f5f9', whiteSpace: 'normal', wordBreak: 'break-word', textOverflow: 'ellipsis', overflow: 'hidden' }}>{q.text}</TableCell>
                     ))}
-                    <TableCell sx={{ border: '1px solid #e0e0e0', minWidth: 40, maxWidth: 60, background: '#f1f5f9' }}></TableCell>
+                    <TableCell sx={{ border: '1px solid #e0e0e0', minWidth: 24, maxWidth: 36, background: '#f1f5f9', p: 0 }}></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -93,25 +93,26 @@ const SurveyStats: React.FC<{ surveyId: number; onBack: () => void }> = ({ surve
                           <TableCell
                             key={q.id}
                             align="center"
-                            sx={{ border: '1px solid #e0e0e0', minWidth: 140, maxWidth: 220, cursor: value ? 'pointer' : 'default', background: value ? '#f9fafb' : undefined, whiteSpace: 'normal', wordBreak: 'break-word', textOverflow: 'ellipsis', overflow: 'hidden' }}
+                            sx={{ border: '1px solid #e0e0e0', minWidth: 80, maxWidth: 120, cursor: value ? 'pointer' : 'default', background: value ? '#f9fafb' : undefined, whiteSpace: 'normal', wordBreak: 'break-word', textOverflow: 'ellipsis', overflow: 'hidden', p: 0.5 }}
                             onClick={() => value && handleOpenDialog(String(value))}
                           >
                             <span style={{
                               display: 'inline-block',
-                              maxWidth: 180,
+                              maxWidth: 100,
                               whiteSpace: 'normal',
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
                               verticalAlign: 'middle',
                               color: value ? '#1976d2' : '#222',
-                              fontWeight: value ? 500 : 400
+                              fontWeight: value ? 500 : 400,
+                              fontSize: 15
                             }}>{value}</span>
                           </TableCell>
                         );
                       })}
-                      <TableCell sx={{ border: '1px solid #e0e0e0', minWidth: 40, maxWidth: 60 }}>
-                        <IconButton color="error" onClick={() => handleDeleteRespondent(r.id)} size="small">
-                          <DeleteIcon />
+                      <TableCell sx={{ border: '1px solid #e0e0e0', minWidth: 24, maxWidth: 36, p: 0, textAlign: 'center' }}>
+                        <IconButton color="error" onClick={() => handleDeleteRespondent(r.id)} size="small" sx={{ m: 0 }}>
+                          <DeleteIcon fontSize="small" />
                         </IconButton>
                       </TableCell>
                     </TableRow>
