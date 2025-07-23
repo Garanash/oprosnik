@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     restart: always
@@ -30,11 +28,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    ports:
-      - "8000:8000"
     restart: always
     environment:
       - DATABASE_URL=postgresql+asyncpg://postgres:postgres@postgres:5432/oprosnik
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   frontend:
     networks:
@@ -46,6 +47,11 @@ services:
       - "80:80"
       - "443:443"
     restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   db-network:
