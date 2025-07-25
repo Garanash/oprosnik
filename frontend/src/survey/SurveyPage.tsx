@@ -93,8 +93,8 @@ const SurveyPage: React.FC = () => {
             <Typography variant="h4" mb={2} fontWeight={700}>{survey.title}</Typography>
             <Typography mb={2} color="text.secondary">{survey.description}</Typography>
             {survey.questions.map(q => (
-              <Box key={q.id} mb={4}>
-                <Typography mb={1.5} fontWeight={500} fontSize={18}>{q.text}</Typography>
+              <Paper key={q.id} elevation={2} sx={{ mb: 4, p: 2, borderLeft: '6px solid #1976d2', background: '#fafdff', boxShadow: '0 2px 12px #e3eaf3' }}>
+                <Typography mb={1.5} fontWeight={700} fontSize={24}>{q.text}</Typography>
                 {q.type === 'text' && (
                   <TextField fullWidth value={answers[q.id] || ''} onChange={e => handleAnswer(q, e.target.value)} sx={{ background: '#f5f7fa', borderRadius: 2, fontSize: 20, minHeight: 56, '& .MuiInputBase-input': { fontSize: 20, py: 2 } }} InputProps={{ style: { fontSize: 20, minHeight: 56, padding: '18px 16px' } }} />
                 )}
@@ -127,7 +127,7 @@ const SurveyPage: React.FC = () => {
                     ))}
                   </FormGroup>
                 )}
-              </Box>
+              </Paper>
             ))}
             {error && <Typography color="error" mb={2}>{error}</Typography>}
             <Button variant="contained" color="primary" onClick={handleSubmit} disabled={mutation.isLoading || !isAllAnswered} sx={{ fontSize: 20, py: 2, px: 5, borderRadius: 3, mt: 3 }}>

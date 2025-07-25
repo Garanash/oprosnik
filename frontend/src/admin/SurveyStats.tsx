@@ -67,7 +67,7 @@ const SurveyStats: React.FC<{ surveyId: number; onBack: () => void }> = ({ surve
           <Typography sx={{ px: 3 }}>Загрузка...</Typography>
         ) : (
           <Box sx={{ flex: 1, width: '100%', maxWidth: '100vw', overflowX: 'hidden', overflowY: 'auto', p: { xs: 0, md: 2 }, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', minHeight: 'calc(100vh - 120px)' }}>
-            <Paper elevation={4} sx={{ width: '90vw', maxWidth: '90vw', borderRadius: 3, p: 2, boxShadow: '0 4px 24px #e0e7ef', background: 'rgba(255,255,255,0.98)', overflowX: 'auto', m: '0 auto', height: '80vh', minHeight: 320, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
+            <Paper elevation={4} sx={{ width: '100vw', height: '70vh', borderRadius: 4, p: 3, boxShadow: '0 6px 32px #e0e7ef', background: 'rgba(255,255,255,0.98)', overflowX: 'auto', m: '40px 0', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
               <Table size="small" sx={{ width: '100%', tableLayout: 'auto', borderCollapse: 'collapse' }}>
                 <TableHead>
                   <TableRow>
